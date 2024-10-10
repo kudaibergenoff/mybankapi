@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "54320:5432"
+      - ${DB_PORT}:5432
     volumes:
       - ./deploy/postgres_data:/var/lib/postgresql/data
 
