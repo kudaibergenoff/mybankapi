@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS accounts CASCADE;
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS accounts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    account_number VARCHAR(20) UNIQUE NOT NULL,
+    account_type VARCHAR(20) NOT NULL,
+    balance NUMERIC(10, 2) DEFAULT 0,
+    frozen BOOLEAN DEFAULT FALSE
+);
