@@ -7,10 +7,10 @@ import (
 )
 
 type AccountService struct {
-	repo *repositories.AccountRepository
+	repo repositories.AccountRepositoryInterface
 }
 
-func NewAccountService(repo *repositories.AccountRepository) *AccountService {
+func NewAccountService(repo repositories.AccountRepositoryInterface) *AccountService {
 	return &AccountService{repo: repo}
 }
 

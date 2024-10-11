@@ -1,9 +1,336 @@
 basePath: /api
+definitions:
+  models.Account:
+    properties:
+      account_type:
+        $ref: '#/definitions/models.AccountType'
+      balance:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: string
+      is_frozen:
+        type: boolean
+      updated_at:
+        type: string
+    type: object
+  models.AccountCreateRequest:
+    properties:
+      account_type:
+        $ref: '#/definitions/models.AccountType'
+      balance:
+        type: number
+      is_frozen:
+        type: boolean
+    type: object
+  models.AccountType:
+    enum:
+    - checking
+    - savings
+    type: string
+    x-enum-varnames:
+    - Checking
+    - Savings
 host: localhost:8080
 info:
   contact: {}
   description: This is a sample API for bank transactions.
   title: MyBankAPI
   version: "1.0"
-paths: {}
+paths:
+  /accounts:
+    post:
+      consumes:
+      - application/json
+      description: Create a new account with the input payload
+      parameters:
+      - description: Account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/models.AccountCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: cannot parse JSON
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: failed to create account
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new account
+      tags:
+      - accounts
+  /accounts/{id}:
+    delete:
+      description: Delete an account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: failed to delete account
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete an account
+      tags:
+      - accounts
+    get:
+      consumes:
+      - application/json
+      description: Get details of an account by its ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Account'
+        "500":
+          description: account not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get an account by ID
+      tags:
+      - accounts
+    put:
+      consumes:
+      - application/json
+      description: Update an existing account with the input payload
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/models.AccountCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: cannot parse JSON
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: failed to update account
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update an existing account
+      tags:
+      - accounts
+  /accounts/{id}/credit:
+    post:
+      consumes:
+      - application/json
+      description: Credit an account by a given amount
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Amount
+        in: path
+        name: amount
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: account credited
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: cannot parse JSON
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Credit an account
+      tags:
+      - transactions
+  /accounts/{id}/debit:
+    post:
+      consumes:
+      - application/json
+      description: Debit an account by a given amount
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Amount
+        in: path
+        name: amount
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: account debited
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: cannot parse JSON
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Debit an account
+      tags:
+      - transactions
+  /accounts/{id}/freeze:
+    post:
+      description: Freeze an account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: account frozen
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: failed to freeze account
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Freeze an account
+      tags:
+      - accounts
+  /accounts/{id}/unfreeze:
+    post:
+      description: Unfreeze an account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: account unfrozen
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: failed to unfreeze account
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Unfreeze an account
+      tags:
+      - accounts
+  /transfer:
+    post:
+      consumes:
+      - application/json
+      description: Transfer funds from one account to another
+      parameters:
+      - description: From Account ID
+        in: path
+        name: from_account_id
+        required: true
+        type: string
+      - description: To Account ID
+        in: path
+        name: to_account_id
+        required: true
+        type: string
+      - description: Amount
+        in: path
+        name: amount
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: transfer successful
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: cannot parse JSON
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Transfer funds between accounts
+      tags:
+      - transactions
 swagger: "2.0"

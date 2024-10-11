@@ -21,7 +21,7 @@ func NewAccountController(service *services.AccountService) *AccountController {
 // @Tags accounts
 // @Accept  json
 // @Produce  json
-// @Param account body models.Account true "Account"
+// @Param account body models.AccountCreateRequest true "Account"
 // @Success 201 {object} models.Account
 // @Failure 400 {object} map[string]string "cannot parse JSON"
 // @Failure 500 {object} map[string]string "failed to create account"
@@ -46,7 +46,7 @@ func (ctrl *AccountController) CreateAccount(c *fiber.Ctx) error {
 // @Accept  json
 // @Produce  json
 // @Param id path string true "Account ID"
-// @Param account body models.Account true "Account"
+// @Param account body models.AccountCreateRequest true "Account"
 // @Success 200 {object} models.Account
 // @Failure 400 {object} map[string]string "cannot parse JSON"
 // @Failure 500 {object} map[string]string "failed to update account"

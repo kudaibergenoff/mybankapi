@@ -8,11 +8,11 @@ import (
 )
 
 type TransactionService struct {
-	accountRepo     *repositories.AccountRepository
-	transactionRepo *repositories.TransactionRepository
+	accountRepo     repositories.AccountRepositoryInterface
+	transactionRepo repositories.TransactionRepositoryInterface
 }
 
-func NewTransactionService(accountRepo *repositories.AccountRepository, transactionRepo *repositories.TransactionRepository) *TransactionService {
+func NewTransactionService(accountRepo repositories.AccountRepositoryInterface, transactionRepo repositories.TransactionRepositoryInterface) *TransactionService {
 	return &TransactionService{accountRepo: accountRepo, transactionRepo: transactionRepo}
 }
 

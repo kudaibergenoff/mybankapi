@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/kudaibergenoff/mybankapi/routes"
 	"log"
 
@@ -14,9 +16,10 @@ import (
 // @description This is a sample API for bank transactions.
 // @host localhost:8080
 // @BasePath /api
-
 func main() {
 	app := fiber.New()
+	app.Use(logger.New())
+	app.Use(cors.New())
 
 	r := routes.NewRoute(app)
 	r.Register()

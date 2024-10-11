@@ -55,6 +55,10 @@ run:
 build:
 	go build ./cmd/main.go
 
+test:
+	echo "Running tests..."
+	go test -cover ./...
+
 # ==============================================================================
 # Modules support
 
