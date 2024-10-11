@@ -14,13 +14,14 @@ services:
   app:
     build:
       context: .
-      dockerfile: deploy/Dockerfile
+      dockerfile: deploy/opt.Dockerfile
     volumes:
       - .:/app
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     depends_on:
       - postgres
-
 volumes:
   postgres_data:

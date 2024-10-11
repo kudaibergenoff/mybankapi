@@ -1,0 +1,9 @@
+basePath: /api
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample API for bank transactions.
+  title: MyBankAPI
+  version: "1.0"
+paths: {}
+swagger: "2.0"

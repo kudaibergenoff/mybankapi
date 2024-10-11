@@ -5,7 +5,7 @@ endif
 include .env
 export $(shell sed 's/=.*//' .env)
 
-DATABASE_URL=postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE)
+DATABASE_URL=postgres://$(DB_USER):$(DB_PASSWORD)@localhost:$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE)
 
 .PHONY: migrate migrate_down migrate_up migrate_version
 
@@ -43,6 +43,8 @@ stop:
 build:
 	echo "Building docker environment"
 	docker compose -f compose.yml build
+bash:
+	docker compose -f compose.yml exec app /bin/sh
 
 # ==============================================================================
 # Main
@@ -66,10 +68,12 @@ tidy:
 	go mod vendor
 
 deps-upgrade:
-	# go get $(go list -f '{{if not (or .Main .Indirect)}}{{.Path}}{{end}}' -m all)
 	go get -u -t -d -v ./...
 	go mod tidy
 	go mod vendor
 
 deps-cleancache:
 	go clean -modcache
+
+doc-generate:
+	swag init --dir cmd/ --generalInfo main.go
