@@ -13,16 +13,19 @@ DATABASE_URL=postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAM
 # Go migrate postgresql
 
 force:
-	migrate -database $(DATABASE_URL) -path migrations force
+	echo "Stating migration force"
+	migrate -database $(DATABASE_URL) -path migrations force 1
 
 version:
 	migrate -database $(DATABASE_URL) -path migrations version
 
 migrate_up:
-	migrate -database $(DATABASE_URL) -path migrations up
+	echo "Starting migration up"
+	migrate -database $(DATABASE_URL) -path migrations up 1
 
 migrate_down:
-	migrate -database $(DATABASE_URL) -path migrations down
+	echo "Stating migration down"
+	migrate -database $(DATABASE_URL) -path migrations down 1
 
 
 # ==============================================================================
@@ -30,4 +33,43 @@ migrate_down:
 
 develop:
 	echo "Starting docker environment"
-	docker-compose -f compose.yml up --build
+	docker compose -f compose.yml up --build
+down:
+	echo "Down docker environment"
+	docker compose -f compose.yml down
+stop:
+	echo "Stopping docker environment"
+	docker compose -f compose.yml stop
+build:
+	echo "Building docker environment"
+	docker compose -f compose.yml build
+
+# ==============================================================================
+# Main
+
+run:
+	go run ./cmd/main.go
+
+build:
+	go build ./cmd/main.go
+
+# ==============================================================================
+# Modules support
+
+deps-reset:
+	git checkout -- go.mod
+	go mod tidy
+	go mod vendor
+
+tidy:
+	go mod tidy
+	go mod vendor
+
+deps-upgrade:
+	# go get $(go list -f '{{if not (or .Main .Indirect)}}{{.Path}}{{end}}' -m all)
+	go get -u -t -d -v ./...
+	go mod tidy
+	go mod vendor
+
+deps-cleancache:
+	go clean -modcache
